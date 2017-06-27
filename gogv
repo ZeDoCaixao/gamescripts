@@ -1,0 +1,32 @@
+#!/bin/sh
+USAGE="Usage: $0 [options] gog_installer_path.sh
+
+Options:
+-h  : show this help message and exit
+-v  : only print game version, not all info
+
+Examples:
+gogv gog_machinarium_2.0.0.1.sh
+gogv -v gog_machinarium_2.0.0.1.sh
+"
+H=3
+T=4
+while getopts vh name
+do
+    case $name in
+    v)   H=1
+         T=2;;
+    h)   printf "$USAGE"
+         exit 0;;
+    ?)   echo "$USAGE"
+         exit 2;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+if [ -z $1 ]; then
+    printf "$USAGE"
+    exit 2
+fi
+
+unzip -c "$1" data/noarch/gameinfo 2> /dev/null || echo "Cant get gameinfo. Is $1 real gog installer?" | tail -$T | head -$H

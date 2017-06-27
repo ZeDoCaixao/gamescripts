@@ -1,0 +1,70 @@
+#!/usr/bin/python3
+
+# Copyright (C) 2017 Зека-из-Гроба
+# Thanks to hypermozg for <https://rutracker.org/forum/viewtopic.php?p=68143490>
+#
+# License WTFPL
+#
+# This program is free software. It comes without any warranty, to the extent
+# permitted by applicable law.
+# You can redistribute it and/or modify it under the terms of the Do What The
+# Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See
+# http://www.wtfpl.net/ for more details.
+
+
+import os
+
+
+def log(mes):
+    """Print log message"""
+    # TODO: use logging module
+    print(mes)
+
+
+def get_executables(path):
+    return [f for f in os.listdir(path)
+            if os.path.isfile(f) and os.access(f, os.X_OK)]
+
+
+def get_gamename(files):
+    if len(files) == 1:
+        return files[0]
+
+    names = []
+    for f in files:
+        if f.endswith(".x86") or f.endswith(".x86_64"):
+            names.append(f.rsplit(".", 1)[0])
+
+    if not names:
+        return ""
+    elif len(names) == 1:
+        return names[0]
+    elif len(names) == 2 and names[0] == names[1]:
+        return names[0]+".$ARCH"
+    else:
+        print("    ".join(names))
+        return input("Enter name:")
+
+
+def main():
+    name = get_gamename(get_executables("."))
+    script = START_TEMPLATE.format(gamename=name)
+    with open("start.sh", "w") as f:
+        f.write(script)
+    os.chmod("start.sh", 0o755)
+
+
+START_TEMPLATE = """#!/bin/sh
+cd "$(dirname "$0")"
+export LC_ALL=C
+
+ARCH="$(uname -m)"
+if [ "$ARCH" != "x86_64" ]; then
+    ARCH="x86"
+fi
+export LD_LIBRARY_PATH="lib.$ARCH:$LD_LIBRARY_PATH"
+
+exec "./{gamename}" "$@"
+"""
+
+main()
