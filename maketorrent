@@ -8,26 +8,26 @@
 SAVEDIR="/tmp"
 
 size=$(du "$1" | cut -f1)
-echo $size
-if [ $size -gt 17000000 ]; then
+echo "$size"
+if [ "$size" -gt 17000000 ]; then
     leng=25
-elif [ $size -gt 9000000 ]; then
+elif [ "$size" -gt 9000000 ]; then
     leng=24
-elif [ $size -gt 4300000 ]; then
+elif [ "$size" -gt 4300000 ]; then
     leng=23
-elif [ $size -gt 2200000 ]; then
+elif [ "$size" -gt 2200000 ]; then
     leng=22
-elif [ $size -gt 1100000 ]; then
+elif [ "$size" -gt 1100000 ]; then
     leng=21
-elif [ $size -gt 530000 ]; then
+elif [ "$size" -gt 530000 ]; then
     leng=20
-elif [ $size -gt 270000 ]; then
+elif [ "$size" -gt 270000 ]; then
     leng=19
-elif [ $size -gt 130000 ]; then
+elif [ "$size" -gt 130000 ]; then
     leng=18
-elif [ $size -gt 70000 ]; then
+elif [ "$size" -gt 70000 ]; then
     leng=17
-elif [ $size -gt 40000 ]; then
+elif [ "$size" -gt 40000 ]; then
     leng=16
 else
     leng=15
