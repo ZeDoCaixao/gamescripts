@@ -1,37 +1,37 @@
 #!/bin/sh
 
 VERSION=$1
-if [ -z $VERSION ]; then
+if [ -z "$VERSION" ]; then
     echo "usage: dlunity VESION" 1>&2
     echo "e.g.: dlunity 5.4.1f1" 1>&2
     exit 1
-elif echo $VERSION | grep "p"; then
+elif echo "$VERSION" | grep "p"; then
     RELTYPE="p"
-elif echo $VERSION | grep "f"; then
+elif echo "$VERSION" | grep "f"; then
     RELTYPE="f"
-    SHORTVERSION="$(echo $VERSION | cut -df -f 1)"
+    SHORTVERSION="$(echo "$VERSION" | cut -df -f 1)"
 else
     echo "Only versions with 'p' or 'f' supported" 1>&2
     exit 1
 fi
 
 get_revision_f() {
-    curl https://unity3d.com/ru/unity/whats-new/unity-$SHORTVERSION \
+    curl "https://unity3d.com/ru/unity/whats-new/unity-$SHORTVERSION" \
     | grep -i revision \
     | cut -d\  -f 2 | cut -d\< -f 1
 }
 
 get_revision_p() {
-    for i in `seq 99`; do
+    for i in $(seq 99); do
         echo "Searching page $i..." 1>&2
         r="$(\
             curl "https://unity3d.com/ru/unity/qa/patch-releases?page=$i" 2> /dev/null\
-            | grep 'http://beta.unity3d.com/download/.*'$VERSION'.exe' \
+            | grep "http://beta.unity3d.com/download/.*$VERSION.exe" \
             | head -1 \
             | cut -d/ -f 5
         )"
         if [ -n "$r" ]; then
-            echo $r
+            echo "$r"
             break
         fi
     done
@@ -46,6 +46,6 @@ fi
 TEMPFILE=/tmp/unity-$VERSION
 OUTDIR="unity3d-$VERSION"
 
-wget http://download.unity3d.com/download_unity/$REVISION/TargetSupportInstaller/UnitySetup-Linux-Support-for-Editor-$VERSION.exe -O $TEMPFILE &&\
+wget "http://download.unity3d.com/download_unity/$REVISION/TargetSupportInstaller/UnitySetup-Linux-Support-for-Editor-$VERSION.exe" -O "$TEMPFILE" &&\
 7z x -o"$OUTDIR" "$TEMPFILE" \*/Varia\* &&
 rm "$TEMPFILE"

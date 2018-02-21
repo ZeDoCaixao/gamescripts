@@ -16,16 +16,16 @@ do
     case $name in
     v)   H=1
          T=2;;
-    h)   printf "$USAGE"
+    h)   echo "$USAGE"
          exit 0;;
     ?)   echo "$USAGE"
          exit 2;;
     esac
 done
-shift $(($OPTIND - 1))
+shift $(("$OPTIND" - 1))
 
-if [ -z $1 ]; then
-    printf "$USAGE"
+if [ -z "$1" ]; then
+    echo "$USAGE"
     exit 2
 fi
 
